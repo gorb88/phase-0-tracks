@@ -1,3 +1,5 @@
+Elevator Algorithm
+
 -Determine and remember desired floor.
 -Locate indicator of current floor on wall and remember that value.
 -If current floor matches desired floor, 
@@ -16,3 +18,33 @@
     -Wait until ding and elevator floor indicator matches desired floor
         -Wait for doors to open.
         -Exit
+
+Tuning Algorithm for Electric Guitars.
+
+- Choose number of strings (ie: 4, 6, 7, 12)
+- Choose guitar tuning. (ie: EADGBE, DGBA)
+- Remember tuning machine arrangement (ie: 6 inline, 3x3)
+- Plug a cable into guitar with one end and a tuning pedal with another.
+- If power supply is available
+    - Plug power supply into tuning pedal
+- If power supply is unavailable,
+    - Make sure pedal has battery.
+- Depress and release footswitch momentarily to turn on.
+- Initialize a boolean to remember whether each iteration through the strings has had all strings in tune.
+- Starting on lowest string iterating through each until highest based on number of strings.
+    - If string is first string, set boolean to true.
+    - Store working string orientation value
+    - Store working tuning machine position value
+    - Pluck string.
+    - Read Tuning pedal
+    - If pedal reads in tune, move to next string.
+    - If pedal reads flat
+        - Set boolean as false
+        -Twist tuning machine attached to working string in direction that applys tension to string, depending on string orientation and tuning machine position.
+        - Rotate tuning machine until tuning pedal reads in tune.
+    - If pedal reads sharp
+        - Set boolean as false
+        -Twist tuning machine attached to working string in direction that reduces tension on string, depending on string orientation and tuning machine position.
+        - Rotate tuning machine until tuning pedal reads in tune.
+- Repeat until all strings read in tune on tuning pedal. (Boolean is true after 6th string)
+    
