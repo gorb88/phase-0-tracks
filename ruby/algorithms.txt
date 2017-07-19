@@ -1,0 +1,18 @@
+-Determine and remember desired floor.
+-Locate indicator of current floor on wall and remember that value.
+-If current floor matches desired floor, 
+    -Direction is equal to nil and end program.
+-If current floor is less than desired floor, 
+    -Direction is equal to up.
+-If current floor is greater than desired floor, 
+    -Direction is equal to down.
+-If direction is not nil
+    -Locate up/down buttons on wall by elevator.
+    -With the appropriate force, press button matching desired direction.
+    -Wait for elevator direction light and ding to indicate an elevator with matching direction has arrived.
+    -Enter elevator and check each wall for control panel.
+    -Once located, find button marked with number equal to the desired floor destination
+    -With the appropriate force, press and hold previous button for 0.5 seconds and release.
+    -Wait until ding and elevator floor indicator matches desired floor
+        -Wait for doors to open.
+        -Exit
