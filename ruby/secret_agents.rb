@@ -65,3 +65,16 @@ end
 #call appropriate method using password as argument
 #puts new password
 
+puts "Would you like to encrypt of decrypt your password?"
+answer = gets.chomp!
+
+puts "Enter your password"
+password = gets.chomp
+
+if answer == "encrypt"
+  puts encrypt(password)
+elsif answer == "decrypt"
+  puts decrypt(password)
+else
+  puts "You didn't properly specify encrypt or decrypt"
+end
