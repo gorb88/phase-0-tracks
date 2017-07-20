@@ -25,12 +25,16 @@ def encrypt(password)
   i = 0
   passlength = password.length
   while i < passlength
-    if password[i] != " "
-      password[i] = password[i].next
+    if password[i] == "z"
+      password[i] = "a"
+    elsif password[i] != " " && password[i] != "z"
+      alpha_index = $alphabet.index(password[i])
+      password[i] = $alphabet[alpha_index + 1]
     end
     i = i + 1
   end
-  puts password
+  #puts password
+  return password
 end
 
 def decrypt(password)
@@ -43,9 +47,21 @@ def decrypt(password)
     end
     i = i + 1
   end
-  puts password
+  #puts password
+  return password
 
 end
 
 
-decrypt("bcd")
+#decrypt(encrypt("swordfish"))
+#encrypt takes a string, changes the string, returning the string, which makes the encrypt function evaluate to a new string, that decrypt then manipulates
+
+
+#ask encrypt or decrypt using gets chomp
+#if statement parsing it in value
+
+# ask for password using getschomp
+
+#call appropriate method using password as argument
+#puts new password
+
