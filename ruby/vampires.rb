@@ -3,6 +3,24 @@ applicants = gets.chomp.to_i
 
 i = 0
 
+def allergy_ask
+
+  puts "Please list your allergies, one at a time. Type 'done' to finish."
+  allergy = gets.chomp
+
+  until allergy == "sunshine" || allergy == "done"
+    puts "What else"
+    allergy = gets.chomp!
+  end
+  if allergy == "sunshine"
+    return true
+  elsif allergy == "done"
+    return false
+  else
+    return "Something's gone awry in the allergy method"
+  end
+end
+
 def survey
   puts "What is your name?"
   their_name = gets.chomp
@@ -45,20 +63,24 @@ def survey
     puts "You didn't give an appropriate answer to the garlic bread question."
   end
 
+  allergy = allergy_ask
 
   ######
 
-  case
-  when age && gar_bread && health
+  if age && gar_bread && health
     result = "Probably not a vamp"
-  when !age && (!gar_bread || !health)
+  end
+  if !age && (!gar_bread || !health)
     result = "Probably a vamp"
-  when !age && !gar_bread && !health
+  end
+  if !age && !gar_bread && !health
     result = "Almost certainly a vamp"
-  when their_name == "Drake Cula" || their_name == "Tu Fang"
+  end
+  if their_name == "Drake Cula" || their_name == "Tu Fang" || allergy
    result = "Definitely a vampire"
-  else
-   result = "Something's gone awry"
+  end
+  if result == ""
+    result = "Something's gone awry"
   end
 
   puts ""
@@ -66,6 +88,7 @@ def survey
   puts "Age correct? #{age}"
   puts "Wants garlic bread? #{gar_bread}"
   puts "Wants to enroll? #{health}"
+  puts "Allergic to sunshine? #{allergy}"
 
   puts "Result of survey is: #{result}"
   puts ""
@@ -75,3 +98,5 @@ while i < applicants
   survey
   i += 1
 end
+
+puts "Actually, never mind! What do these questions have to do with anything? Let's all be friends."
