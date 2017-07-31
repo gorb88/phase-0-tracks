@@ -26,8 +26,11 @@
 "The case of the disappearing last letter".chop
 # => "The case of the disappearing last lette"
 
-"The mystery of the missing first letter".<???>
+"The mystery of the missing first letter".slice!(0)
 # => "he mystery of the missing first letter"
+#unfortuantely this actually returns "T" and not the string,
+#but the string is modified in place.
+#Not sure how to do it with one method while returning the modified string...
 
 "Elementary,    my   dear        Watson!".squeeze(" ")
 # => "Elementary, my dear Watson!"
