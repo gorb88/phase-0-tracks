@@ -9,6 +9,8 @@
   #access each key value, converting appropriately
   #return hash
 
+#Define method that parses y/n
+
 #Define method that updates hash
   #ask if they'd like to update
   #if gets equals a key
@@ -52,6 +54,26 @@ def build_hash
 
 end
 
+
+def convert_to_bool(value)
+  if value == "y"
+    value = true
+  elsif value == "n"
+    value = false
+  end
+  return value
+end
+
+
+def clean(data)
+  data[:age] = data[:age].to_i
+  data[:size] = data[:size].to_i
+  data[:flagged] = convert_to_bool(data[:flagged])
+  data[:important] = convert_to_bool(data[:important])
+  return data
+end
+
 data = {}
 data = build_hash
-puts data
+
+puts clean(data)
