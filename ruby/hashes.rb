@@ -73,7 +73,24 @@ def clean(data)
   return data
 end
 
+def update(data)
+  puts "If you would like to update a value, enter the desired key, otherwise enter \"none\""
+  key = gets.chomp
+  if key == "none"
+    return data
+  else
+    puts "Enter the new value:"
+    data[key.to_sym] = gets.chomp
+    return data
+  end
+end
+
+#driver
+
 data = {}
 data = build_hash
-
-puts clean(data)
+data = clean(data)
+puts data
+data = update(data)
+data = clean(data)
+puts data
