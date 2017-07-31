@@ -25,6 +25,7 @@
   #set hash variable to converted hash using convert method
   #print hash
   #run update method
+  #clean
   #print hash
 
 
@@ -87,7 +88,6 @@ end
 
 #driver
 
-data = {}
 data = build_hash
 data = clean(data)
 puts data
