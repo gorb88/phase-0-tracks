@@ -104,3 +104,23 @@ remove_item(grocery_list_hash, "lemonade")
 update_item_quantity(grocery_list_hash, "ice cream", 1)
 
 grocery_list_print(grocery_list_hash)
+
+
+=begin
+
+Reflection
+
+What did you learn about pseudocode from working on this challenge?
+  I learned about how specific I should be while writing pseudocode- that I should be a lot more general.
+What are the tradeoffs of using arrays and hashes for this challenge?
+  I'm not even sure how you would use an array for this challenge. Two dimensional arrays? Hashes best fit as a model for real life behavior: A name (tomato) and a value associated with it (3).
+What does a method return?
+  A method returns the last statement called.
+What kind of things can you pass into methods as arguments?
+  Hmm objects of any kind I think? Things like arrays, strings, blocks, numbers, booleans etc.
+How can you pass information between methods?
+  A good way is to use the return of a method as an argument passed to a new method.
+What concepts were solidified in this challenge, and what concepts are still confusing?
+  It solidified my understanding of how methods can manipulate objects outside of the scope of a method. Ie, calling an the update method changes the value of the list passed to it, so you don't have to set the value of the stored hash to be equal to the return of the method like 'grocery_list_hash = update_item(grocery_list_hash)'. You can just call update_item.
+
+=end
