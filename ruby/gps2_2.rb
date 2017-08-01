@@ -14,6 +14,20 @@
   # print the list to the console [can you use one of your other methods here?]
 # output: hash with user input keys and values set as default quantity
 
+
+def grocery_list(items)
+
+  grocery_list_hash = {}
+  items = items.split(" ")
+  items.each do |item|
+    #grocery_list_hash.store(item, default_quantity)
+    grocery_list_hash[item] = 1
+  end
+  grocery_list_hash
+end
+
+p grocery_list("carrots apples cereal pizza")
+
 # Method to add an item to a list
 # input: list, item name, and optional quantity
 # steps:
