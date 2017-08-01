@@ -26,7 +26,7 @@ def grocery_list(items)
   grocery_list_hash
 end
 
-p grocery_list("carrots apples cereal pizza")
+grocery_list_hash = grocery_list("carrots apples cereal pizza")
 
 # Method to add an item to a list
 # input: list, item name, and optional quantity
@@ -38,6 +38,14 @@ p grocery_list("carrots apples cereal pizza")
       #and the value is the optional quantity, or default quantity
 # output: old hash with new key/value pair
 
+def new_item(list, item_name, quantity = 1)
+  list[item_name] = quantity
+  list
+end
+
+p new_item(grocery_list_hash, "bananas", 25)
+
+
 # Method to remove an item from the list
 # input: list, item name
 # steps:
@@ -47,15 +55,25 @@ p grocery_list("carrots apples cereal pizza")
     #delete matching key/value pair
 # output: old hash with identified key/value pair removed
 
+def remove_item(list, item_name)
+  list.delete(item_name)
+  list
+end
+
+p remove_item(grocery_list_hash, "carrots")
+
+
 # Method to update the quantity of an item
 # input: list, item name, quantity
 # steps:
   #define method that takes 3 arguments
-    #arguments list, item name, quanitity
+    #arguments list, item name, quantity
     #update key/value pair in list hash
       #key is item name
       #value is updated quantity
 # output: old hash with updated quantity for identified k/v pair
+
+
 
 # Method to print a list and make it look pretty
 # input: list
