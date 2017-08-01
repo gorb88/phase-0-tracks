@@ -26,8 +26,6 @@ def grocery_list(items)
   grocery_list_hash
 end
 
-grocery_list_hash = grocery_list("carrots apples cereal pizza")
-
 # Method to add an item to a list
 # input: list, item name, and optional quantity
 # steps:
@@ -42,8 +40,6 @@ def new_item(list, item_name, quantity = 1)
   list[item_name] = quantity
   list
 end
-
-p new_item(grocery_list_hash, "bananas", 25)
 
 
 # Method to remove an item from the list
@@ -60,8 +56,6 @@ def remove_item(list, item_name)
   list
 end
 
-p remove_item(grocery_list_hash, "carrots")
-
 
 # Method to update the quantity of an item
 # input: list, item name, quantity
@@ -73,6 +67,10 @@ p remove_item(grocery_list_hash, "carrots")
       #value is updated quantity
 # output: old hash with updated quantity for identified k/v pair
 
+def update_item_quantity(list, item_name, quantity)
+  list[item_name] = quantity
+  list
+end
 
 
 # Method to print a list and make it look pretty
@@ -85,3 +83,24 @@ p remove_item(grocery_list_hash, "carrots")
     #print each k/v pair
 
 # output: list? nil?
+
+def grocery_list_print(list)
+  puts "Grocery list:"
+  list.each do |item, quantity|
+    puts item.capitalize + ": x#{quantity}"
+  end
+end
+
+grocery_list_hash = grocery_list("carrots apples cereal pizza")
+
+
+new_item(grocery_list_hash, "lemonade", 2)
+new_item(grocery_list_hash, "tomatoes", 3)
+new_item(grocery_list_hash, "onions", 1)
+new_item(grocery_list_hash, "ice cream", 4)
+
+remove_item(grocery_list_hash, "lemonade")
+
+update_item_quantity(grocery_list_hash, "ice cream", 1)
+
+grocery_list_print(grocery_list_hash)
