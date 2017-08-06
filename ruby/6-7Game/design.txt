@@ -37,7 +37,7 @@ guess
         if not already guessed
          increment guess_number
          add guess to letters_guessed
-    output: none
+    output: letter
 
 is_game_over
     input: none
