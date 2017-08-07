@@ -1,0 +1,80 @@
+One user can enter a word (or phrase, if you would like your game to support that), and another user attempts to guess the word.
+
+
+Guesses are limited, and the number of guesses available is related to the length of the word.
+
+
+Repeated guesses do not count against the user.
+
+
+The guessing player receives continual feedback on the current state of the word. So if the secret word is "unicorn", the user will start out seeing something like "_ _ _ _ _ _ _", which would become "_ _ _ c _ _ _" after the user enters a guess of "c".
+
+The user should get a congratulatory message if they win, and a taunting message if they lose.
+
+Game class:
+
+attributes:
+goal_word - accessor
+current_word - accessor
+guesses_left - accessor
+letters_guessed - accessor
+
+methods:
+
+initialize
+    input: word
+    set guesses_left based on length of word.
+    set goal_word
+    output: none
+
+guess
+    input: letter
+        if not already guessed
+         increment guess_number
+         add guess to letters_guessed
+    output: letter
+
+is_game_over
+    input: none
+        check to see if guesses is over maximum
+        or if word is guessed
+    output: boolean
+
+update_current_word
+    input: none
+        iterate through goal word, checking against letters guessed,
+            replace each unguessed letter with "_"
+    output: array
+
+print_status
+    input: none
+        print word and guesses
+    output: none
+
+results
+    input: none
+        Print winner
+        based on word is guessed
+        or guesses over max
+    output: none
+
+
+Driver code:
+
+declare game_over boolean, set to false
+
+Ask for word.
+Create new game based on word received
+
+while game_over is false
+    print status
+    ask for letter
+    update
+    if game is over, change game_over to true
+
+print results
+
+
+
+
+
