@@ -7,11 +7,11 @@ class WordGuess
   attr_accessor :letters_guessed
 
   def initialize(word)
-    @goal_word = word
+    @goal_word = word.downcase
     @guesses_left = word.length + 5
     @letters_guessed = []
+    @divider = "\n" + "<<>>"*15
     self.update_current_word
-    @divider = "\n<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>"
   end
 
   def update_current_word
@@ -47,17 +47,12 @@ class WordGuess
     status = "\n#{@current_word}\nYou have #{@guesses_left} guesses left\n"
     puts status
     puts @divider
+    #returns this for testing
     status
   end
 
   def is_game_over?
-    if @guesses_left <= 0
-      true
-    elsif @current_word == @goal_word
-      true
-    else
-      false
-    end
+    @guesses_left <= 0 || @current_word == @goal_word
   end
 
   def results
@@ -65,7 +60,6 @@ class WordGuess
       puts "\nPlayer 2 guessed the word! The word was #{@goal_word}!"
     elsif @guesses_left <= 0
       puts "\nPlayer 1 outfoxed Player 2! The word was #{@goal_word}!"
-
     end
   end
 
@@ -82,7 +76,6 @@ def interface
 
   1000.times {puts "\n\n"}
   puts "Thank you Player 1, now Player 2 has #{game.guesses_left} tries to guess the word!"
-  puts @divider
 
   until game.is_game_over?
     game.print_status
@@ -92,4 +85,4 @@ def interface
   game.results
 end
 
-#interface
+interface
