@@ -12,25 +12,25 @@ describe WordGuess do
   it "Updates current word" do
     game = WordGuess.new("hotdog")
     game.letters_guessed = ["e", "d", "s", "h"]
-    expect(game.update_current_word).to eq "h__d__"
+    expect(game.update_current_word).to eq "h--d--"
   end
 
   it "Prints status" do
     game1 = WordGuess.new("hotdog")
-    expect(game1.print_status).to eq "______\n You have 11 guesses left"
+    expect(game1.print_status).to eq "\n------\nYou have 11 guesses left\n"
     game2 = WordGuess.new("slime")
-    expect(game2.print_status).to eq "_____\n You have 10 guesses left"
+    expect(game2.print_status).to eq "\n-----\nYou have 10 guesses left\n"
   end
 
   it "Guesses a correct letter" do
     game = WordGuess.new("tortoise")
     game.guess("o")
-    expect(game.print_status).to eq "_o__o___\n You have 12 guesses left"
+    expect(game.print_status).to eq "\n-o--o---\nYou have 12 guesses left\n"
   end
     it "Guesses an incorrect letter" do
     game = WordGuess.new("tortoise")
     game.guess("z")
-    expect(game.print_status).to eq "________\n You have 12 guesses left"
+    expect(game.print_status).to eq "\n--------\nYou have 12 guesses left\n"
   end
 
   it "Checks to see if ran out of guesses" do
@@ -50,25 +50,20 @@ describe WordGuess do
     expect(game.is_game_over?).to eq false
   end
 
-  it "Prints final results, winning" do
-    game = WordGuess.new("babylon")
-    game.current_word = game.goal_word
-    expect(game.results).to eq true
+  it "prints results" do
+    expect do
+      game = WordGuess.new("babylon")
+      game.guesses_left = 0
+      game.results
+    end.to output("\nPlayer 1 outfoxed Player 2! The word was babylon!\n").to_stdout
   end
 
-  it "Prints final results, losing" do
-    game = WordGuess.new("babylon")
-    game.guesses_left = 0
-    expect(game.results).to eq true
+  it "prints results" do
+    expect do
+      game = WordGuess.new("babylon")
+      game.current_word = game.goal_word
+      game.results
+    end.to output("\nPlayer 2 guessed the word! The word was babylon!\n").to_stdout
   end
-
- it "prints results" do
-      expect do
-        game = WordGuess.new("babylon")
-        game.guesses_left = 0
-        game.results
-      end.to output("You lost! The word was babylon!\n").to_stdout
-    end
-
 
 end
