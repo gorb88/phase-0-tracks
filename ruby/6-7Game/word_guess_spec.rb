@@ -22,10 +22,44 @@ describe WordGuess do
     expect(game2.print_status).to eq "_____\n You have 10 guesses left"
   end
 
-  it "Guesses a letter" do
+  it "Guesses a correct letter" do
     game = WordGuess.new("tortoise")
     game.guess("o")
     expect(game.print_status).to eq "_o__o___\n You have 12 guesses left"
+  end
+    it "Guesses an incorrect letter" do
+    game = WordGuess.new("tortoise")
+    game.guess("z")
+    expect(game.print_status).to eq "________\n You have 12 guesses left"
+  end
+
+  it "Checks to see if ran out of guesses" do
+    game = WordGuess.new("babylon")
+    game.guesses_left = 0
+    expect(game.is_game_over?).to eq true
+  end
+
+  it "Checks to see if you won" do
+    game = WordGuess.new("babylon")
+    game.current_word = game.goal_word
+    expect(game.is_game_over?).to eq true
+  end
+
+  it "Checks to see if game is over, but it's not" do
+    game = WordGuess.new("babylon")
+    expect(game.is_game_over?).to eq false
+  end
+
+  it "Prints final results, winning" do
+    game = WordGuess.new("babylon")
+    game.current_word = game.goal_word
+    expect(results).to eq "You won! The word was babylon!"
+  end
+
+  it "Prints final results, losing" do
+    game = WordGuess.new("babylon")
+    game.guesses_left = 0
+    expect(results).to eq "You lost! The word was babylon!"
   end
 
 end

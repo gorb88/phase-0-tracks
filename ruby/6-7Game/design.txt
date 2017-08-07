@@ -18,7 +18,6 @@ goal_word - accessor
 current_word - accessor
 guesses_left - accessor
 letters_guessed - accessor
-current_guess - accessor
 
 methods:
 

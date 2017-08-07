@@ -5,7 +5,6 @@ class WordGuess
   attr_accessor :current_word
   attr_accessor :guesses_left
   attr_accessor :letters_guessed
-  attr_accessor :current_guess
 
   def initialize(word)
     @goal_word = word
@@ -46,6 +45,21 @@ class WordGuess
     status = "#{@current_word}\n You have #{@guesses_left} guesses left"
     puts status
     status
+  end
+
+  def is_game_over?
+    if @guesses_left <= 0
+      self.results
+      true
+    elsif @current_word == @goal_word
+      self.results
+      true
+    else
+      false
+    end
+  end
+
+  def results
   end
 
 end
