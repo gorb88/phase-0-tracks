@@ -27,10 +27,6 @@ initialize
     set goal_word
     output: none
 
-set_letter
-    input: none
-    code: use accessor
-    output: string
 guess
     input: letter
         if not already guessed

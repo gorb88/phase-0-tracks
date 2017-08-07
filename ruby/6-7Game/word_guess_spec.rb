@@ -53,13 +53,22 @@ describe WordGuess do
   it "Prints final results, winning" do
     game = WordGuess.new("babylon")
     game.current_word = game.goal_word
-    expect(results).to eq "You won! The word was babylon!"
+    expect(game.results).to eq true
   end
 
   it "Prints final results, losing" do
     game = WordGuess.new("babylon")
     game.guesses_left = 0
-    expect(results).to eq "You lost! The word was babylon!"
+    expect(game.results).to eq true
   end
+
+ it "prints results" do
+      expect do
+        game = WordGuess.new("babylon")
+        game.guesses_left = 0
+        game.results
+      end.to output("You lost! The word was babylon!\n").to_stdout
+    end
+
 
 end

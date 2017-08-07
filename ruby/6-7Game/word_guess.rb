@@ -60,6 +60,12 @@ class WordGuess
   end
 
   def results
+    if @guesses_left <= 0
+      puts "You lost! The word was #{@goal_word}!"
+    elsif @current_word == @goal_word
+      result = "You won! The word was #{@goal_word}!"
+    end
+    true
   end
 
 end
