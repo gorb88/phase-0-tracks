@@ -88,3 +88,16 @@ STATE_DATA.each {|state, data| VirusPredictor.new(state).virus_effects }
 
 #=======================================================================
 # Reflection Section
+=begin
+What are the differences between the two different hash syntaxes shown in the state_data file?
+  state_data uses strings as keys and rocket notation for the state names and symbols for the inner hash that stores density and population data.
+What does require_relative do? How is it different from require?
+  Both are used to import external code and provide outside methods and tools. Require uses an explicit path for an included file, whereas require_relative is based on the directory of the main file.
+What are some ways to iterate through a hash?
+  #Each is probably most common iterator for hashes, but several other hash methods can iterate through hashes, like #reject or #delete.
+When refactoring virus_effects, what stood out to you about the variables, if anything?
+  That you can call a method inside of string interpolation, and that you don't need to pass instance variables to instance methods because the scope allows them to be accessed already.
+What concept did you most solidify in this challenge?
+  Hash manipulation in general and keeping it DRY, efficient, and readable.
+
+=end
