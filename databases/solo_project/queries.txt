@@ -1,0 +1,80 @@
+Display the information in one table (either table is fine).
+
+SELECT * FROM guitars;
+
+1|Mustang|1964|true|1
+2|Les Paul|1952|false|2
+3|White Falcon|1954|true|3
+4|Stratocaster|1954|true|1
+5|Melody Maker|1959|false|2
+6|Country Gentleman|1957|true|3
+7|Telecaster|1950|false|1
+8|Explorer|1958|false|2
+9|Duo-Jet|1955|true|3
+
+
+Update an item that meets some condition (you can choose a condition that makes sense).
+
+UPDATE guitars SET tremolo="true" WHERE model="Telecaster";
+
+Display the information in both tables using one query.
+
+SELECT * FROM guitars, brands WHERE guitars.brand_id = brands.brand_id;
+
+1|Mustang|1964|true|1|1|Fender
+2|Les Paul|1952|false|2|2|Gibson
+3|White Falcon|1954|true|3|3|Gretsch
+4|Stratocaster|1954|true|1|1|Fender
+5|Melody Maker|1959|false|2|2|Gibson
+6|Country Gentleman|1957|true|3|3|Gretsch
+7|Telecaster|1950|true|1|1|Fender
+8|Explorer|1958|false|2|2|Gibson
+9|Duo-Jet|1955|true|3|3|Gretsch
+
+Display a narrower selection of columns (fewer columns than all of them, in other words) from both tables using one query.
+
+SELECT guitars.model, brands.brand FROM guitars JOIN brands ON guitars.brand_id = brands.brand_id;
+
+Mustang|Fender
+Les Paul|Gibson
+White Falcon|Gretsch
+Stratocaster|Fender
+Melody Maker|Gibson
+Country Gentleman|Gretsch
+Telecaster|Fender
+Explorer|Gibson
+Duo-Jet|Gretsch
+
+Delete an item that meets some condition (you can choose a condition that makes sense).
+
+DELETE FROM guitars WHERE model="Duo-Jet";
+
+
+More joins:
+
+Inserted a new row into guitars that has a guitar with an unknown brand, then used a left join to show all the guitars and their brands, including the one with the unknown brand. a regular join wouldn't show the unbranded guitar.
+
+
+SELECT guitars.model, brands.brand FROM guitars LEFT JOIN brands ON guitars.brand_id = brands.brand_id;
+
+
+Mustang|Fender
+Les Paul|Gibson
+White Falcon|Gretsch
+Stratocaster|Fender
+Melody Maker|Gibson
+Country Gentleman|Gretsch
+Telecaster|Fender
+Explorer|Gibson
+Weirdo guitar|
+
+SELECT * FROM guitars NATURAL JOIN brands;
+
+1|Mustang|1964|true|1|Fender
+2|Les Paul|1952|false|2|Gibson
+3|White Falcon|1954|true|3|Gretsch
+4|Stratocaster|1954|true|1|Fender
+5|Melody Maker|1959|false|2|Gibson
+6|Country Gentleman|1957|true|3|Gretsch
+7|Telecaster|1950|true|1|Fender
+8|Explorer|1958|false|2|Gibson
