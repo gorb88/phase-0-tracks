@@ -92,7 +92,7 @@ db.execute(create_plot)
 
 
 $day = 0
-$gold = 200
+$gold = 0
 $user_id = 0
 
 def sleep(db)
@@ -117,21 +117,34 @@ def start_game(db)
   puts "\n"
   puts "Enter your user name:"
   name = gets.chomp
-  puts "Welcome, #{name}!"
-  name_check = db.execute("SELECT ? FROM farmer", [name])
-  p name_check
+  name_check = db.execute("SELECT name FROM farmer WHERE name = ?", name)
   if name_check.empty?
     db.execute("INSERT INTO farmer(name, day, gold) VALUES (?, ?, ?)", [name, 0, 200])
-  name_check = db.execute("SELECT ? FROM farmer", [name])
-  p name_check
+    puts "Welcome, #{name}!"
+  else
+    puts "Welcome back, #{name}!"
   end
+  $user_id = db.execute("SELECT id FROM farmer WHERE name = ?", name)
 end
 
+def set_gold(db, user_id, gold)
+  db.execute("UPDATE farmer SET gold = ? WHERE id = ?", [gold, user_id])
+end
+
+def get_gold(db, user_id)
+  db.execute("SELECT gold FROM farmer WHERE id = ?", [user_id])
+end
 
 def driver(db)
   start_game(db)
   while true
+    new_day(db)
     status(db)
+    p "!!!"
+    p $user_id
+    puts $user_id
+    print $user_id
+    p "!!!"
     puts "What would you like to do?"
     puts "Options:"
     puts "1 | sleep"
@@ -148,3 +161,6 @@ def driver(db)
 end
 
 driver(db)
+set_gold(db, $user_id, 200)
+puts get_gold(db, $user_id)
+
