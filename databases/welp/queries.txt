@@ -1,0 +1,23 @@
+CREATE TABLE reviews(
+id INTEGER PRIMARY KEY,
+stars INT,
+comment VARCHAR(255),
+business_id INT,
+user_id INT,
+FOREIGN KEY (business_id) REFERENCES businesses(business_id),
+FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+INSERT INTO reviews (stars, comment, business_id, user_id) VALUES (5, "plumbed v good", 5, 4);
+
+Join three tables, looking for reviews:
+
+SELECT * FROM reviews JOIN businesses ON reviews.business_id = businesses.business_id JOIN users ON reviews.user_id = users.user_id;
+
+Join three tables, looking for reviews but returning limited data:
+
+SELECT users.first_name, users.last_name, businesses.name, reviews.stars, reviews.comment FROM reviews JOIN businesses ON reviews.business_id = businesses.business_id JOIN users ON reviews.user_id = users.user_id;
+
+View all reviews for specific business:
+
+SELECT users.first_name, users.last_name, businesses.name, reviews.stars, reviews.comment FROM businesses JOIN reviews ON reviews.business_id = businesses.business_id JOIN users ON reviews.user_id = users.user_id WHERE businesses.business_id=6;
