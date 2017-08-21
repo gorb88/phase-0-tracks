@@ -232,7 +232,10 @@ def price_check(db, user_id, cost)
   end
 end
 
-
+def print_inventory(db, user_id)
+  inventory = db.execute("SELECT * FROM inventory WHERE id = ?", [user_id])
+  puts inventory
+end
 
 def driver(db)
   start_game(db)
@@ -242,6 +245,7 @@ def driver(db)
     puts "Options:"
     puts "1 | shop"
     puts "2 | sleep"
+    puts "3 | inventory"
     puts "x | exit"
     puts "\n"
     input = gets.chomp
@@ -250,6 +254,8 @@ def driver(db)
         shop(db, $user_id)
       when "2"
        sleep(db, $user_id)
+     when "3"
+        print_inventory(db, $user_id)
      when "x"
         break
     else
