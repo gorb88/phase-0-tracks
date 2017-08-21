@@ -92,26 +92,7 @@ db.execute(create_plot)
 
 
 $day = 0
-$gold = 0
 $user_id = 0
-
-def sleep(db)
-  puts "How many days would you like to sleep?"
-  days = gets.chomp.to_i
-  days.times {|i| new_day}
-  puts "You slept for #{days} days."
-end
-
-def new_day(db)
-  $day += 1
-end
-
-def status(db)
-  puts "\n"
-  puts "Day #{$day}"
-  puts "#{$gold}g"
-  puts "\n"
-end
 
 def start_game(db)
   puts "\n"
@@ -125,6 +106,38 @@ def start_game(db)
     puts "Welcome back, #{name}!"
   end
   $user_id = db.execute("SELECT id FROM farmer WHERE name = ?", name)
+  $user_id = $user_id[0][0]
+end
+
+def sleep(db, user_id)
+  puts "How many days would you like to sleep?"
+  days = gets.chomp.to_i
+  days.times {|i| increment_day(db, $user_id)}
+  puts "You slept for #{days} days."
+end
+
+def new_day(db, user_id)
+  increment_day(db, user_id)
+end
+
+def increment_day(db, user_id)
+  day = get_day(db, user_id)
+  day += 1
+  db.execute("UPDATE farmer SET day = ? WHERE id = ?", [day, user_id])
+end
+
+def get_day(db, user_id)
+  day = db.execute("SELECT day FROM farmer WHERE id = ?", [user_id])
+  day[0][0]
+end
+
+
+def status(db, user_id)
+  puts "\n"
+  puts "Day #{get_day(db, user_id)}"
+  puts "#{get_gold(db, user_id)}g"
+  puts "User#: #{user_id}"
+  puts "\n"
 end
 
 def set_gold(db, user_id, gold)
@@ -132,35 +145,40 @@ def set_gold(db, user_id, gold)
 end
 
 def get_gold(db, user_id)
-  db.execute("SELECT gold FROM farmer WHERE id = ?", [user_id])
+  gold = db.execute("SELECT gold FROM farmer WHERE id = ?", [user_id])
+  gold[0][0]
+end
+
+def shop(db, user_id)
+  puts "What would you like to buy?"
+  puts "#{get_gold(db, $user_id)}g"
+
 end
 
 def driver(db)
   start_game(db)
+  new_day(db, $user_id)
   while true
-    new_day(db)
-    status(db)
-    p "!!!"
-    p $user_id
-    puts $user_id
-    print $user_id
-    p "!!!"
+    status(db, $user_id)
     puts "What would you like to do?"
     puts "Options:"
     puts "1 | sleep"
     puts "2 | exit"
+    puts "3 | shop"
     puts "\n"
     input = gets.chomp
     case
-     when input == "sleep" || input == "1"
-      sleep(db)
-     when input == "exit" || input == "2"
-      break
+      when input == "sleep" || input == "1"
+        sleep(db, $user_id)
+      when input == "exit" || input == "2"
+        break
+      when input == "shop" || input == "3"
+       shop(db, $user_id)
+    else
      end
    end
 end
 
 driver(db)
-set_gold(db, $user_id, 200)
-puts get_gold(db, $user_id)
+
 
