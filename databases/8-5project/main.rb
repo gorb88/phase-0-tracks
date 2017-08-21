@@ -1,29 +1,32 @@
 =begin
 
+
+* = done
+
 Features
 
 User selection *
 Inventory *
-Plant a garden *
+Plant seeds *
 Time passage *
-Buy seeds *
+Shop *
 Sell crops automatically when mature *
-plants *
-  tomatoes
-  corn
-  peppers
-  tomato seeds
-  corn seeds
-  pepper seeds
+View inventory *
+Visualize plot *
+
+Methods
+
+Start new game
+  Prompts for username,
+  Creates new data for new users, retains old data from old users
+
+clear
+  Clears screen
+
+ok
+  Prompts for enter
 
 
-user info*
-name
-day
-money
-
-inventory*
-plot*
 
 =end
 
@@ -75,7 +78,6 @@ db.execute(create_plot)
 
 #methods
 
-
 $user_id = 0
 
 def start_game(db)
@@ -86,12 +88,12 @@ def start_game(db)
   name_check = db.execute("SELECT name FROM farmer WHERE name = ?", name)
   puts "\n"
   if name_check.empty?
-    make_new_user(db, name)
+    user_id = make_new_user(db, name)
   else
     puts "Welcome back, #{name}!"
   end
-  $user_id = db.execute("SELECT id FROM farmer WHERE name = ?", name)
-  $user_id = $user_id[0]["id"]
+  user_id = db.execute("SELECT id FROM farmer WHERE name = ?", name)
+  user_id = user_id[0]["id"]
 end
 
 def ok
@@ -107,10 +109,11 @@ end
 
 def make_new_user(db, name)
   db.execute("INSERT INTO farmer(name, day, gold) VALUES (?, ?, ?)", [name, 0, 2000])
-    $user_id = db.execute("SELECT id FROM farmer WHERE name = ?", name)
-    $user_id = $user_id[0][0]
-    db.execute("INSERT INTO inventory(tomatoes, corn, peppers, tomato_seeds, corn_seeds, pepper_seeds, owner_id) VALUES (0, 0, 0, 0, 0, 0, ?)", $user_id)
+    user_id = db.execute("SELECT id FROM farmer WHERE name = ?", name)
+    user_id = user_id[0][0]
+    db.execute("INSERT INTO inventory(tomatoes, corn, peppers, tomato_seeds, corn_seeds, pepper_seeds, owner_id) VALUES (0, 0, 0, 0, 0, 0, ?)", user_id)
     puts "Welcome, #{name}!"
+    user_id
 end
 
 
@@ -118,7 +121,7 @@ def sleep(db, user_id)
   puts "How many days would you like to sleep?"
   days = gets.chomp.to_i
   clear
-  days.times {|i| increment_day(db, $user_id)}
+  days.times {|i| increment_day(db, user_id)}
   puts "You slept for #{days} days."
 end
 
@@ -260,7 +263,7 @@ end
 
 def print_inventory(db, user_id)
   db.results_as_hash = false
-  inventory = db.execute("SELECT tomatoes, corn, peppers, tomato_seeds, corn_seeds, pepper_seeds FROM inventory WHERE id = ?", [user_id])
+  inventory = db.execute("SELECT tomatoes, corn, peppers, tomato_seeds, corn_seeds, pepper_seeds FROM inventory WHERE id = ?", user_id)
   inventory = inventory[0]
   items = ["Tomatoes", "Corn", "Peppers", "Tomato seeds", "Corn seeds", "Pepper seeds"]
   inventory = inventory.zip(items, inventory)
@@ -306,7 +309,7 @@ end
 
 def plant_seed(db, user_id)
   clear
-  print_plot(db, $user_id)
+  print_plot(db, user_id)
   puts "\n"
   puts "Please enter a column:"
   x = gets.chomp.to_i
@@ -315,7 +318,7 @@ def plant_seed(db, user_id)
   y = gets.chomp.to_i
   puts "\n"
 
-  print_inventory(db, $user_id)
+  print_inventory(db, user_id)
   puts "\n"
   puts "What would you like to plant?"
   puts "1 | Tomato"
@@ -381,9 +384,9 @@ def print_plot(db, user_id)
 end
 
 def driver(db)
-  start_game(db)
+  user_id = start_game(db)
   while true
-    status(db, $user_id)
+    status(db, user_id)
     puts "What would you like to do?"
     puts "1 | Shop"
     puts "2 | Sleep"
@@ -395,20 +398,20 @@ def driver(db)
     input = gets.chomp
     case input
       when "1"
-        shop(db, $user_id)
+        shop(db, user_id)
       when "2"
-       sleep(db, $user_id)
+       sleep(db, user_id)
       when "3"
         clear
-        status(db,$user_id)
-        print_inventory(db, $user_id)
+        status(db,user_id)
+        print_inventory(db, user_id)
         ok
       when "4"
-        plant_seed(db, $user_id)
+        plant_seed(db, user_id)
       when "5"
         clear
-        status(db, $user_id)
-        print_plot(db, $user_id)
+        status(db, user_id)
+        print_plot(db, user_id)
         ok
       when "x"
         break
