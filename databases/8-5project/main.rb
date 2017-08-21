@@ -99,6 +99,7 @@ def start_game(db)
   puts "Enter your user name:"
   name = gets.chomp
   name_check = db.execute("SELECT name FROM farmer WHERE name = ?", name)
+  puts "\n"
   if name_check.empty?
     make_new_user(db, name)
   else
@@ -106,6 +107,11 @@ def start_game(db)
   end
   $user_id = db.execute("SELECT id FROM farmer WHERE name = ?", name)
   $user_id = $user_id[0]["id"]
+end
+
+def ok
+  puts "\nPress any key to continue.\n"
+  gets.chomp
 end
 
 def make_new_user(db, name)
@@ -150,9 +156,7 @@ end
 
 def status(db, user_id)
   puts "\n"
-  puts "Day #{get_day(db, user_id)}"
-  puts "#{get_gold(db, user_id)}g"
-  puts "User#: #{user_id}"
+  puts "Day #{get_day(db, user_id)} | #{get_gold(db, user_id)}g".rjust(15)
   puts "\n"
 end
 
@@ -169,7 +173,7 @@ def shop(db, user_id)
   while true
     puts "\n"
     puts "What would you like to buy?"
-    puts "#{get_gold(db, $user_id)}g"
+    status(db, user_id)
     puts "1 | Tomato seeds - 40g"
     puts "2 | Corn seeds - 30g"
     puts "3 | Pepper seeds - 60g"
@@ -183,11 +187,13 @@ def shop(db, user_id)
           quantity = gets.chomp.to_i
           cost = quantity * 40
           if price_check(db, user_id, cost)
-            puts "\n"
-            puts "You bought #{quantity} tomato seeds for #{cost}g"
             set_item_quantity(db, user_id, "tomato_seeds", get_item_quantity(db, user_id, "tomato_seeds") + quantity)
             set_gold(db, user_id, get_gold(db, user_id) - cost)
+            puts "\n"
+            puts "You bought #{quantity} tomato seeds for #{cost}g"
+            puts "You now have #{get_item_quantity(db, user_id, "tomato_seeds")} tomato seeds."
           end
+          ok
 
       when "2"
         #update inventory
@@ -195,11 +201,13 @@ def shop(db, user_id)
           quantity = gets.chomp.to_i
           cost = quantity * 30
           if price_check(db, user_id, cost)
-            puts "\n"
-            puts "You bought #{quantity} corn seeds for #{cost}g"
             set_item_quantity(db, user_id, "corn_seeds", get_item_quantity(db, user_id, "corn_seeds") + quantity)
             set_gold(db, user_id, get_gold(db, user_id) - cost)
+            puts "\n"
+            puts "You bought #{quantity} corn seeds for #{cost}g"
+            puts "You now have #{get_item_quantity(db, user_id, "corn_seeds")} corn seeds."
           end
+          ok
 
       when "3"
         #update inventory
@@ -207,11 +215,13 @@ def shop(db, user_id)
           quantity = gets.chomp.to_i
           cost = quantity * 60
           if price_check(db, user_id, cost)
-            puts "\n"
-            puts "You bought #{quantity} pepper seeds for #{cost}g"
             set_item_quantity(db, user_id, "pepper_seeds", get_item_quantity(db, user_id, "pepper_seeds") + quantity)
             set_gold(db, user_id, get_gold(db, user_id) - cost)
+            puts "\n"
+            puts "You bought #{quantity} pepper seeds for #{cost}g."
+            puts "You now have #{get_item_quantity(db, user_id, "pepper_seeds")} pepper seeds."
           end
+          ok
 
       when "x"
         break
@@ -219,6 +229,7 @@ def shop(db, user_id)
         puts "\n"
         puts "That's not an option"
         puts "\n"
+        ok
     end
   end
 end
@@ -233,8 +244,18 @@ def price_check(db, user_id, cost)
 end
 
 def print_inventory(db, user_id)
-  inventory = db.execute("SELECT * FROM inventory WHERE id = ?", [user_id])
-  puts inventory
+  db.results_as_hash = false
+  inventory = db.execute("SELECT tomatoes, corn, peppers, tomato_seeds, corn_seeds, pepper_seeds FROM inventory WHERE id = ?", [user_id])
+  inventory = inventory[0]
+  items = ["Tomatoes", "Corn", "Peppers", "Tomato seeds", "Corn seeds", "Pepper seeds"]
+  inventory = inventory.zip(items, inventory)
+  puts "\n"
+  puts "INVENTORY".rjust(15)
+  inventory.each do |x|
+    puts x[1].to_s.ljust(15) + " | " + x[2].to_s.rjust(3)
+  end
+  db.results_as_hash = true
+  ok
 end
 
 def driver(db)
@@ -242,11 +263,10 @@ def driver(db)
   while true
     status(db, $user_id)
     puts "What would you like to do?"
-    puts "Options:"
-    puts "1 | shop"
-    puts "2 | sleep"
-    puts "3 | inventory"
-    puts "x | exit"
+    puts "1 | Shop"
+    puts "2 | Sleep"
+    puts "3 | Inventory"
+    puts "x | Exit"
     puts "\n"
     input = gets.chomp
     case input
@@ -264,9 +284,3 @@ def driver(db)
 end
 
 driver(db)
-#start_game(db)
-
-#puts quantity = db.execute("SELECT tomato_seeds FROM inventory WHERE owner_id = ?", $user_id)
-#puts db.execute2("select * from inventory")
-
-
