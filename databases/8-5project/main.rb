@@ -7,8 +7,8 @@ Inventory *
 Plant a garden *
 Time passage *
 Buy seeds *
-Sell crops
-plants
+Sell crops automatically when mature *
+plants *
   tomatoes
   corn
   peppers
@@ -17,15 +17,13 @@ plants
   pepper seeds
 
 
-userinfo
+user info*
 name
 day
 money
-inventory
-field
 
-
-
+inventory*
+plot*
 
 =end
 
@@ -84,6 +82,7 @@ def start_game(db)
   clear
   puts "Enter your user name:"
   name = gets.chomp
+  clear
   name_check = db.execute("SELECT name FROM farmer WHERE name = ?", name)
   puts "\n"
   if name_check.empty?
@@ -96,8 +95,9 @@ def start_game(db)
 end
 
 def ok
-  puts "\nPress any key to continue.\n"
+  puts "\nPress enter to continue.\n"
   gets.chomp
+  clear
 end
 
 def clear
@@ -117,6 +117,7 @@ end
 def sleep(db, user_id)
   puts "How many days would you like to sleep?"
   days = gets.chomp.to_i
+  clear
   days.times {|i| increment_day(db, $user_id)}
   puts "You slept for #{days} days."
 end
@@ -130,14 +131,37 @@ def set_item_quantity(db, user_id, item, quantity)
   db.execute("UPDATE inventory SET #{item} = ? WHERE id = ?", quantity, user_id)
 end
 
-def new_day(db, user_id)
-  increment_day(db, user_id)
-end
-
 def increment_day(db, user_id)
+  puts "\n"
   day = get_day(db, user_id)
+  gold = get_gold(db, user_id).to_i
   day += 1
   db.execute("UPDATE farmer SET day = ? WHERE id = ?", [day, user_id])
+
+  db.results_as_hash = false
+  plants = db.execute("SELECT * FROM plot WHERE owner_id = ?", user_id)
+  plants.each do |plant|
+    new_day = plant[4] - 1
+    if new_day == 0
+      db.execute("DELETE FROM plot WHERE id = ?", plant[0])
+      case plant[1]
+      when "T"
+        puts "You sold a tomato for 80g!"
+        gold += 80
+      when "C"
+        gold += 60
+        puts "You sold a corn for 60g!"
+      when "P"
+        gold += 120
+        puts "You sold a pepper for 120g!!"
+      end
+      set_gold(db, user_id, gold)
+    else
+      db.execute("UPDATE plot SET days_until_harvest = ? WHERE id = ?", [new_day, plant[0]])
+    end
+  end
+  db.results_as_hash = true
+
 end
 
 def get_day(db, user_id)
@@ -162,6 +186,7 @@ def get_gold(db, user_id)
 end
 
 def shop(db, user_id)
+  clear
   while true
     puts "\n"
     puts "What would you like to buy?"
@@ -213,6 +238,7 @@ def shop(db, user_id)
           ok
 
       when "x"
+        clear
         break
       else
         puts "\n"
@@ -264,6 +290,7 @@ def seed_quantity(db, user_id, seed)
   end
   quantity = get_item_quantity(db, user_id, item)
   if quantity < 1
+    clear
     puts "\n"
     puts "You don't have enough seeds."
     puts "\n"
@@ -278,8 +305,7 @@ end
 
 
 def plant_seed(db, user_id)
-
-  while true
+  clear
   print_plot(db, $user_id)
   puts "\n"
   puts "Please enter a column:"
@@ -297,43 +323,46 @@ def plant_seed(db, user_id)
   puts "3 | Pepper"
   puts "x | nothing, take me back"
   plant = gets.chomp
+  good_choice = true
   case plant
     when "1"
       seed_check = seed_quantity(db, user_id, plant)
       plant = "T"
       days = 10
+      good_choice = true
     when "2"
       seed_check = seed_quantity(db, user_id, plant)
       plant = "C"
       days = 7
+      good_choice = true
     when "3"
       seed_check = seed_quantity(db, user_id, plant)
       plant = "P"
       days = 14
+      good_choice = true
    when "x"
-     break
    else
     puts "\n"
     puts "That's not an option."
     puts "\n"
-    plant = true
+    good_choice = false
    end
-   if seed_check && !plant
+   if seed_check && good_choice
     spot = db.execute("SELECT * FROM plot WHERE x = ? AND y = ? AND owner_id = ?", x, y, user_id)
     if spot.empty?
       db.execute("INSERT INTO plot (plant, x, y, days_until_harvest, owner_id) values (?, ?, ?, ?, ?)", plant, x, y, days, user_id)
-    elsif
+    else
      db.execute("UPDATE plot SET plant = ?, x = ?, y = ?, days_until_harvest = ? WHERE x = ? AND y = ? AND owner_id = ?", plant, x, y, days, x, y, user_id)
+    end
    end
-   end
-  end
+   clear
 end
 
 def print_plot(db, user_id)
   plants = get_plants(db, user_id)
   plot = Array.new(5){Array.new(10,".")}
   plants.each do |plant|
-    plot[plant[0]][plant[1]] = plant[2]
+      plot[plant[1]][plant[0]] = plant[2]
   end
   print_row = ""
   #p plot
@@ -370,11 +399,15 @@ def driver(db)
       when "2"
        sleep(db, $user_id)
       when "3"
+        clear
+        status(db,$user_id)
         print_inventory(db, $user_id)
         ok
       when "4"
         plant_seed(db, $user_id)
       when "5"
+        clear
+        status(db, $user_id)
         print_plot(db, $user_id)
         ok
       when "x"
