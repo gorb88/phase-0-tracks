@@ -19,13 +19,51 @@ Methods
 Start new game
   Prompts for username,
   Creates new data for new users, retains old data from old users
-
 clear
   Clears screen
-
 ok
   Prompts for enter
-
+make new user
+  Creates new user and associated inventory
+sleep
+  prompts for days to sleep
+  increments days
+get item quantity
+  queries inventory
+set item quantity
+  updates inventory
+increment day
+  updates farmer day
+  does plant growing logic
+get day
+  queries farmer
+status
+  prints gold and day
+set gold
+  updates farmer gold
+get gold
+  queries farmer
+shop
+  prompts for item to buy
+  performs shopping logic
+price check
+  check to see if price of item is within budget
+print inventory
+  queries inventory
+  formats nicely
+get plants
+  queries plot for plants
+seed quantity
+  checks to see if user has enough seeds to plant
+plant seed
+  prompts for row and column
+  prompts for which seed
+  checks seed quantity
+print plot
+  prints visualization of plot grid
+  adds plants to appropriate spot
+driver
+  all that other stuff
 
 
 =end
@@ -135,7 +173,6 @@ def set_item_quantity(db, user_id, item, quantity)
 end
 
 def increment_day(db, user_id)
-  puts "\n"
   day = get_day(db, user_id)
   gold = get_gold(db, user_id).to_i
   day += 1
@@ -345,6 +382,7 @@ def plant_seed(db, user_id)
       good_choice = true
    when "x"
    else
+    clear
     puts "\n"
     puts "That's not an option."
     puts "\n"
@@ -358,7 +396,6 @@ def plant_seed(db, user_id)
      db.execute("UPDATE plot SET plant = ?, x = ?, y = ?, days_until_harvest = ? WHERE x = ? AND y = ? AND owner_id = ?", plant, x, y, days, x, y, user_id)
     end
    end
-   clear
 end
 
 def print_plot(db, user_id)
@@ -390,9 +427,9 @@ def driver(db)
     puts "What would you like to do?"
     puts "1 | Shop"
     puts "2 | Sleep"
-    puts "3 | Inventory"
+    puts "3 | View Inventory"
     puts "4 | Plant seed"
-    puts "5 | Plot"
+    puts "5 | View Plot"
     puts "x | Exit"
     puts "\n"
     input = gets.chomp
