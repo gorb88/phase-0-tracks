@@ -46,6 +46,7 @@ field
 
 require 'sqlite3'
 db = SQLite3::Database.new("farm.db")
+db.results_as_hash = true
 
 #initialize dbs
 
@@ -104,12 +105,14 @@ def start_game(db)
     puts "Welcome back, #{name}!"
   end
   $user_id = db.execute("SELECT id FROM farmer WHERE name = ?", name)
-  $user_id = $user_id[0][0]
+  $user_id = $user_id[0]["id"]
 end
 
 def make_new_user(db, name)
   db.execute("INSERT INTO farmer(name, day, gold) VALUES (?, ?, ?)", [name, 0, 2000])
-    #db.execute("INSERT INTO inventory(tomatoes, corn, peppers, tomato_seeds, corn_seeds, pepper_seeds) VALUES (?, ?, ?)", [name, 0, 200])
+    $user_id = db.execute("SELECT id FROM farmer WHERE name = ?", name)
+    $user_id = $user_id[0][0]
+    db.execute("INSERT INTO inventory(tomatoes, corn, peppers, tomato_seeds, corn_seeds, pepper_seeds, owner_id) VALUES (0, 0, 0, 0, 0, 0, ?)", $user_id)
     puts "Welcome, #{name}!"
 end
 
@@ -118,6 +121,15 @@ def sleep(db, user_id)
   days = gets.chomp.to_i
   days.times {|i| increment_day(db, $user_id)}
   puts "You slept for #{days} days."
+end
+
+def get_item_quantity(db, user_id, item)
+  quantity = db.execute("SELECT #{item} FROM inventory WHERE owner_id = ?", user_id)
+  quantity[0][item]
+end
+
+def set_item_quantity(db, user_id, item, quantity)
+  db.execute("UPDATE inventory SET #{item} = ? WHERE id = ?", quantity, user_id)
 end
 
 def new_day(db, user_id)
@@ -132,7 +144,7 @@ end
 
 def get_day(db, user_id)
   day = db.execute("SELECT day FROM farmer WHERE id = ?", [user_id])
-  day[0][0]
+  day[0]["day"]
 end
 
 
@@ -150,7 +162,7 @@ end
 
 def get_gold(db, user_id)
   gold = db.execute("SELECT gold FROM farmer WHERE id = ?", [user_id])
-  gold[0][0]
+  gold[0]["gold"]
 end
 
 def shop(db, user_id)
@@ -173,6 +185,7 @@ def shop(db, user_id)
           if price_check(db, user_id, cost)
             puts "\n"
             puts "You bought #{quantity} tomato seeds for #{cost}g"
+            set_item_quantity(db, user_id, "tomato_seeds", get_item_quantity(db, user_id, "tomato_seeds") + quantity)
             set_gold(db, user_id, get_gold(db, user_id) - cost)
           end
 
@@ -184,6 +197,7 @@ def shop(db, user_id)
           if price_check(db, user_id, cost)
             puts "\n"
             puts "You bought #{quantity} corn seeds for #{cost}g"
+            set_item_quantity(db, user_id, "corn_seeds", get_item_quantity(db, user_id, "corn_seeds") + quantity)
             set_gold(db, user_id, get_gold(db, user_id) - cost)
           end
 
@@ -195,6 +209,7 @@ def shop(db, user_id)
           if price_check(db, user_id, cost)
             puts "\n"
             puts "You bought #{quantity} pepper seeds for #{cost}g"
+            set_item_quantity(db, user_id, "pepper_seeds", get_item_quantity(db, user_id, "pepper_seeds") + quantity)
             set_gold(db, user_id, get_gold(db, user_id) - cost)
           end
 
@@ -216,6 +231,8 @@ def price_check(db, user_id, cost)
     false
   end
 end
+
+
 
 def driver(db)
   start_game(db)
@@ -241,5 +258,9 @@ def driver(db)
 end
 
 driver(db)
+#start_game(db)
+
+#puts quantity = db.execute("SELECT tomato_seeds FROM inventory WHERE owner_id = ?", $user_id)
+#puts db.execute2("select * from inventory")
 
 
