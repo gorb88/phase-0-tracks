@@ -81,7 +81,7 @@ db.execute(create_plot)
 $user_id = 0
 
 def start_game(db)
-  puts "\n"
+  clear
   puts "Enter your user name:"
   name = gets.chomp
   name_check = db.execute("SELECT name FROM farmer WHERE name = ?", name)
@@ -99,6 +99,11 @@ def ok
   puts "\nPress any key to continue.\n"
   gets.chomp
 end
+
+def clear
+  500.times {puts "\n"}
+end
+
 
 def make_new_user(db, name)
   db.execute("INSERT INTO farmer(name, day, gold) VALUES (?, ?, ?)", [name, 0, 2000])
@@ -275,6 +280,7 @@ end
 def plant_seed(db, user_id)
 
   while true
+  print_plot(db, $user_id)
   puts "\n"
   puts "Please enter a column:"
   x = gets.chomp.to_i
@@ -310,12 +316,13 @@ def plant_seed(db, user_id)
     puts "\n"
     puts "That's not an option."
     puts "\n"
+    plant = true
    end
-   if seed_check
+   if seed_check && !plant
     spot = db.execute("SELECT * FROM plot WHERE x = ? AND y = ? AND owner_id = ?", x, y, user_id)
     if spot.empty?
       db.execute("INSERT INTO plot (plant, x, y, days_until_harvest, owner_id) values (?, ?, ?, ?, ?)", plant, x, y, days, user_id)
-    else
+    elsif
      db.execute("UPDATE plot SET plant = ?, x = ?, y = ?, days_until_harvest = ? WHERE x = ? AND y = ? AND owner_id = ?", plant, x, y, days, x, y, user_id)
    end
    end
@@ -330,7 +337,11 @@ def print_plot(db, user_id)
   end
   print_row = ""
   #p plot
+  puts " 0123456789"
+  i = 0
   plot.each do |row|
+    print_row = i.to_s
+    i += 1
     row.each do |item|
       print_row += item
     end
