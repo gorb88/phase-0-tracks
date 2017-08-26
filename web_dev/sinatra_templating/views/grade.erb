@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+ <% average = 0
+  @grades.each do |grade|
+    average += grade["grade"].to_i
+  end
+  average = average/@grades.length %>
+
+  <p>Your grade is: <%= average %> </p>
+</body>
+</html>
