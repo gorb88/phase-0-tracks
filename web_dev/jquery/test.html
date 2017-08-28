@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>testing</title>
+  <style type="text/css">
+    body {background-color: white;}
+    h1 {color: blue;}
+    p {background-color: black; color: white;}
+  </style>
+</head>
+<body>
+
+<div id="red">
+<p> click here for red</p>
+</div>
+
+<div id="green">
+<p> click here for green</p>
+</div>
+
+<div id="blue">
+<p> click here for blue</p>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="jquery.js"></script>
+<script>
+  $(document).ready(function() {
+
+     $("#red").click(function(){
+        $("body").css({"backgroundColor":"red"});
+    });
+     $("#green").click(function(){
+        $("body").css({"backgroundColor":"green"});
+    });
+     $("#blue").click(function(){
+        $("body").css({"backgroundColor":"blue"});
+    });
+
+   });
+
+
+  </script>
+</body>
+</html>
